@@ -75,6 +75,35 @@ namespace CrudEstudiantes.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Delete(int id)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return View(student);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
 
