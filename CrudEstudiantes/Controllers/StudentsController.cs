@@ -37,5 +37,44 @@ namespace CrudEstudiantes.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+        public IActionResult Edit(int id)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return View(student);
+        }   
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Student student)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(student);
+            }
+
+            var studentInDb = _context.Students.FirstOrDefault(s => s.Id == student.Id);
+
+            if (studentInDb == null)
+            {
+                return NotFound();
+            }
+
+            studentInDb.FirstName = student.FirstName;
+            studentInDb.LastName = student.LastName;
+            studentInDb.Age = student.Age;
+            studentInDb.Email = student.Email;
+            studentInDb.Major = student.Major;
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
+
